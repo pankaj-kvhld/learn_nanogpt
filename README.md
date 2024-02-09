@@ -87,3 +87,64 @@ print(decode(encode('hi there')))
 
     [46, 47, 1, 58, 46, 43, 56, 43]
     hi there
+
+Convert data to tensors:
+
+``` python
+data = torch.tensor(encode(text), dtype=torch.long)
+data
+```
+
+    tensor([18, 47, 56,  ..., 45,  8,  0])
+
+``` python
+print(decode([i.item() for i in data[:100]]))
+```
+
+    First Citizen:
+    Before we proceed any further, hear me speak.
+
+    All:
+    Speak, speak.
+
+    First Citizen:
+    You
+
+Prepare train and validation sets.
+
+``` python
+n=int(0.9*len(data))
+train_data=data[:n]
+val_data=data[n:]
+train_data.shape, val_data.shape
+```
+
+    (torch.Size([1003854]), torch.Size([111540]))
+
+`block_size` is the length of text on which transformer is trained. It
+is also called the context length.
+
+``` python
+block_size = 8
+train_data[: block_size + 1]
+```
+
+    tensor([18, 47, 56, 57, 58,  1, 15, 47, 58])
+
+``` python
+x=train_data[:block_size]
+y=train_data[1:block_size+1]
+for t in range(len(x)):
+    context=x[:t+1]
+    target=y[t]
+    print(f"For context {context} target is {target}")
+```
+
+    For context tensor([18]) target is 47
+    For context tensor([18, 47]) target is 56
+    For context tensor([18, 47, 56]) target is 57
+    For context tensor([18, 47, 56, 57]) target is 58
+    For context tensor([18, 47, 56, 57, 58]) target is 1
+    For context tensor([18, 47, 56, 57, 58,  1]) target is 15
+    For context tensor([18, 47, 56, 57, 58,  1, 15]) target is 47
+    For context tensor([18, 47, 56, 57, 58,  1, 15, 47]) target is 58
