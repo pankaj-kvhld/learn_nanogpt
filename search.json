@@ -1,0 +1,22 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "learn_nanogpt",
+    "section": "",
+    "text": "Read and inspect the tiny shakespeare data.\n\nwith open(\"../data/input.txt\", \"r\", encoding=\"utf-8\") as f:\n    text = f.read()\nprint(f\"{len(text):_}\")\n\n1_115_394\n\n\nFirst 1000 characters:\n\nprint(text[:1000])\n\nFirst Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.\n\nFirst Citizen:\nYou are all resolved rather to die than to famish?\n\nAll:\nResolved. resolved.\n\nFirst Citizen:\nFirst, you know Caius Marcius is chief enemy to the people.\n\nAll:\nWe know't, we know't.\n\nFirst Citizen:\nLet us kill him, and we'll have corn at our own price.\nIs't a verdict?\n\nAll:\nNo more talking on't; let it be done: away, away!\n\nSecond Citizen:\nOne word, good citizens.\n\nFirst Citizen:\nWe are accounted poor citizens, the patricians good.\nWhat authority surfeits on would relieve us: if they\nwould yield us but the superfluity, while it were\nwholesome, we might guess they relieved us humanely;\nbut they think we are too dear: the leanness that\nafflicts us, the object of our misery, is as an\ninventory to particularise their abundance; our\nsufferance is a gain to them Let us revenge this with\nour pikes, ere we become rakes: for the gods know I\nspeak this in hunger for bread, not in thirst for revenge.\n\n\n\n\nGet all unique characters:\n\nchars= sorted(list(set(text)))\nvocab_size=len(chars)\nprint(vocab_size, ''.join(chars))\n\n65 \n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\n\n\nCreate the encoder and decoders:\n\nstoi = {ch:i for i, ch in enumerate(chars)}\nitos = {i:ch for i, ch in enumerate(chars)}\nencode = lambda s: [stoi[ch] for ch in s]\ndecode = lambda l: ''.join([itos[i] for i in l])\n\n[46, 47, 1, 58, 46, 43, 56, 43]\n\n\n\nprint(encode('hi there'))\nprint(decode(encode('hi there')))\n\n[46, 47, 1, 58, 46, 43, 56, 43]\nhi there\n\n\nConvert data to tensors:\n\ndata = torch.tensor(encode(text), dtype=torch.long)\ndata\n\ntensor([18, 47, 56,  ..., 45,  8,  0])\n\n\n\nprint(decode([i.item() for i in data[:100]]))\n\nFirst Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.\n\nFirst Citizen:\nYou\n\n\nPrepare train and validation sets.\n\nn=int(0.9*len(data))\ntrain_data=data[:n]\nval_data=data[n:]\ntrain_data.shape, val_data.shape\n\n(torch.Size([1003854]), torch.Size([111540]))\n\n\nblock_size is the length of text on which transformer is trained. It is also called the context length.\n\nblock_size = 8\ntrain_data[: block_size + 1]\n\ntensor([18, 47, 56, 57, 58,  1, 15, 47, 58])\n\n\n\nx=train_data[:block_size]\ny=train_data[1:block_size+1]\nfor t in range(len(x)):\n    context=x[:t+1]\n    target=y[t]\n    print(f\"For context {context} target is {target}\")\n\nFor context tensor([18]) target is 47\nFor context tensor([18, 47]) target is 56\nFor context tensor([18, 47, 56]) target is 57\nFor context tensor([18, 47, 56, 57]) target is 58\nFor context tensor([18, 47, 56, 57, 58]) target is 1\nFor context tensor([18, 47, 56, 57, 58,  1]) target is 15\nFor context tensor([18, 47, 56, 57, 58,  1, 15]) target is 47\nFor context tensor([18, 47, 56, 57, 58,  1, 15, 47]) target is 58",
+    "crumbs": [
+      "learn_nanogpt"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "source\n\nfoo\n\n foo ()",
+    "crumbs": [
+      "core"
+    ]
+  }
+]
