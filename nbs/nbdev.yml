@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "learn_nanogpt"
+  site-url: "https://pankaj-kvhld.github.io/learn_nanogpt"
+  description: "Notes on Andrej NanoGpt"
+  repo-branch: main
+  repo-url: "https://github.com/pankaj-kvhld/learn_nanogpt"
